@@ -1,0 +1,10 @@
+services:
+    os2display.sparkle_feed.service:
+        class: Os2Display\SparkleFeedBundle\Service\SparkleFeedService
+        arguments: ['@os2display.sparkle_feed.cache', '%sparkle_feed_client_id%','%sparkle_feed_client_secret%']
+        tags:
+            - { name: kernel.event_listener, event: ik.cron, method: onCron }
+
+    os2display.sparkle_feed.cache:
+        class: Doctrine\Common\Cache\FilesystemCache
+        arguments: ['%kernel.cache_dir%']

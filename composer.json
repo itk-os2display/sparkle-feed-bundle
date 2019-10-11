@@ -1,0 +1,14 @@
+{
+    "name": "os2display/sparkle-feed-bundle",
+    "description": "Os2Display Sparkle feed bundle.",
+    "type": "symfony-bundle",
+    "require": {
+        "doctrine/cache": "^1.0",
+        "guzzlehttp/guzzle": "^6.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Os2Display\\SparkleFeedBundle\\": ""
+        }
+    }
+}
