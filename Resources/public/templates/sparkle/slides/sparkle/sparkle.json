@@ -1,0 +1,30 @@
+{
+  "id": "sparkle",
+  "type": "slide",
+  "name": "Sparkle.io feed",
+  "icon": "sparkle.png",
+  "paths": {
+    "live": "sparkle.html",
+    "edit": "sparkle.html",
+    "preview": "sparkle.html",
+    "css": "sparkle.css",
+    "js": "sparkle.js"
+  },
+  "slide_type": "sparkle",
+  "media_type": "image",
+  "script_id": "sparkle",
+  "orientation": "landscape",
+  "ideal_dimensions": {
+    "width": "1920",
+    "height": "1080"
+  },
+  "empty_options": {
+    "orientation": "landscape"
+  },
+  "tools": [
+    {
+      "name": "Sparkle",
+      "id": "sparkle"
+    }
+  ]
+}

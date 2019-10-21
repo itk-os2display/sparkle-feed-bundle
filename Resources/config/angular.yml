@@ -1,0 +1,15 @@
+assets:
+    js: []
+    css: []
+    js_prod_assets: []
+    js_prod: []
+
+modules:
+    sparkleModule:
+        files:
+            - bundles/os2displaysparklefeed/apps/sparkle/module.js
+
+apps:
+    ikApp:
+        dependencies:
+            - sparkleModule

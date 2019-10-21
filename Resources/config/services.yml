@@ -7,4 +7,4 @@ services:
 
     os2display.sparkle_feed.cache:
         class: Doctrine\Common\Cache\FilesystemCache
-        arguments: ['%kernel.cache_dir%']
+        arguments: ['%kernel.cache_dir%/sparkle']

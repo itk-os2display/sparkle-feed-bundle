@@ -37,6 +37,7 @@ class SparkleFeedService
      */
     public function onCron(CronEvent $cronEvent)
     {
+        // @TODO: Handle cron event.
     }
 
     /**

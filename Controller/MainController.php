@@ -18,10 +18,12 @@ class MainController extends Controller
      */
     public function testAction()
     {
-        $feeds = $this->container->get('os2display.sparkle_feed.service')->getFeeds();
+        $feeds = $this->container->get('os2display.sparkle_feed.service')
+            ->getFeeds();
 
         foreach ($feeds as $feed) {
-            $feed->contents = $this->container->get('os2display.sparkle_feed.service')->getFeed($feed->id);
+            $feed->contents = $this->container->get('os2display.sparkle_feed.service')
+                ->getFeed($feed->id);
         }
 
         return new JsonResponse(
