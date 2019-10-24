@@ -8,6 +8,7 @@ modules:
     sparkleModule:
         files:
             - bundles/os2displaysparklefeed/apps/sparkle/module.js
+            - bundles/os2displaysparklefeed/apps/sparkle/sparkle.js
 
 apps:
     ikApp:

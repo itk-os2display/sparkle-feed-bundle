@@ -17,7 +17,7 @@
           <div class="itk-template-extension--tool-section">
             <h2 class="itk-template-extension--tool-headline">Vælg feed</h2>
 
-            <!-- @TODO add feeds -->
+            <div ng-repeat="feed in feeds" ng-click="selectFeed(feed)" ng-style="{'color': feed.id === slide.options.selectedFeed ? 'green' : null}">{{feed.name}}</div>
           </div>
 
           <div class="itk-template-extension--button" data-ng-click="close()">

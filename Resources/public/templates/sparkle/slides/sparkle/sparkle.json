@@ -19,7 +19,8 @@
     "height": "1080"
   },
   "empty_options": {
-    "orientation": "landscape"
+    "orientation": "landscape",
+    "selectedFeed": null
   },
   "tools": [
     {

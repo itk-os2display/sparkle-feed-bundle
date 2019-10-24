@@ -30,4 +30,17 @@ class MainController extends Controller
             ['feeds' => $feeds]
         );
     }
+
+    /**
+     * Get a list of feeds available.
+     */
+    public function feedsAction()
+    {
+        $feeds = $this->container->get('os2display.sparkle_feed.service')
+            ->getFeeds();
+
+        return new JsonResponse(
+            ['feeds' => $feeds]
+        );
+    }
 }
