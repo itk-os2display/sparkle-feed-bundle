@@ -20,5 +20,13 @@ class Os2DisplaySparkleFeedExtension extends Os2DisplayBaseExtension
         $this->dir = __DIR__;
 
         parent::load($configs, $container);
+
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
+        $def = $container->getDefinition('os2display.sparkle_feed.service');
+        $def->replaceArgument(0, $config['cron_interval']);
+        $def->replaceArgument(1, $config['api_url']);
+        $def->replaceArgument(2, $config['client_id']);
+        $def->replaceArgument(3, $config['client_secret']);
     }
 }

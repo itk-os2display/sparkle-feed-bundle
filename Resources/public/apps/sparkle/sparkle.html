@@ -1,6 +1,6 @@
 <div class="edit-menu--background" role="banner">
   <div class="edit-menu--background-inner">
-    <div class="edit-menu--toggle-icon" data-ng-click="close()">
+    <div class="edit-menu--toggle-icon" data-ng-click="closeTool()">
       <div class="svg-clickable">
         <object data="bundles/os2displayadmin/images/svg/cancel.svg"
                 type="image/svg+xml">
@@ -14,13 +14,15 @@
         <div class="itk-template-extension--content">
           <h2 class="edit-menu--background-header">sparkle.io slideindstillinger</h2>
 
-          <div class="itk-template-extension--tool-section">
+          <div class="itk-template-extension--tool-section" ng-if="!saving">
             <h2 class="itk-template-extension--tool-headline">Vælg feed</h2>
 
             <div ng-repeat="feed in feeds" ng-click="selectFeed(feed)" ng-style="{'color': feed.id === slide.options.selectedFeed ? 'green' : null}">{{feed.name}}</div>
           </div>
 
-          <div class="itk-template-extension--button" data-ng-click="close()">
+          <div ng-if="saving">Saving...</div>
+
+          <div class="itk-template-extension--button" data-ng-click="closeTool()">
             Afslut
           </div>
         </div>

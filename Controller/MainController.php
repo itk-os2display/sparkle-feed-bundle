@@ -43,4 +43,17 @@ class MainController extends Controller
             ['feeds' => $feeds]
         );
     }
+
+    /**
+     * Get feed.
+     */
+    public function feedAction($feedId)
+    {
+        $feeds = $this->container->get('os2display.sparkle_feed.service')
+            ->getFeed($feedId);
+
+        return new JsonResponse(
+            ['feeds' => $feeds]
+        );
+    }
 }

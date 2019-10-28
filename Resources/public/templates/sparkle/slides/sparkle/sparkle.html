@@ -1,8 +1,20 @@
-<div style="display: flex; flex-direction: row;" ng-style="{'font-size': theStyle.fontsize, 'width': theStyle.width, 'height': theStyle.height }">
-  <div style="flex: 1; background-color: deepskyblue">
-    Sparkle media
+<div class="sparkle" ng-style="{'font-size': theStyle.fontsize, 'width': theStyle.width, 'height': theStyle.height }">
+  <!-- Editor -->
+  <div ng-if="!ikSlide.externalData" class="sparkle-wrapper">
+    <div class="sparkle-section sparkle-media-section">
+      <img ng-src="{{ikSlide.options.firstElement.mediaUrl}}">
+    </div>
+    <div class="sparkle-section sparkle-text-section">
+      {{ikSlide.options.firstElement.text}}
+    </div>
   </div>
-  <div style="flex: 1; background-color: #00a0f2">
-    Sparkle text
+  <!-- Live -->
+  <div ng-if="ikSlide.externalData" class="sparkle-wrapper">
+    <div class="sparkle-section sparkle-media-section">
+      <img ng-src="{{ikSlide.currentItem.mediaUrl}}">
+    </div>
+    <div class="sparkle-section sparkle-text-section">
+      {{ikSlide.options.currentItem.text}}
+    </div>
   </div>
 </div>

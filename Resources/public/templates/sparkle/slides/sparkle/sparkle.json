@@ -19,6 +19,7 @@
     "height": "1080"
   },
   "empty_options": {
+    "fontsize": 16,
     "orientation": "landscape",
     "selectedFeed": null
   },

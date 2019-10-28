@@ -5,3 +5,7 @@ sparkle_feed_test:
 sparkle_feed_feeds:
     path: /sparkle/feeds
     defaults: { _controller: Os2DisplaySparkleFeedBundle:Main:feeds }
+
+sparkle_feed_feed:
+    path: /sparkle/feed/{feedId}
+    defaults: { _controller: Os2DisplaySparkleFeedBundle:Main:feed }

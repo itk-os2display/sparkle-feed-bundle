@@ -20,6 +20,15 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('os2_display_sparkle_feed');
 
+        $rootNode
+            ->children()
+                ->scalarNode('client_id')->defaultValue('')->end()
+                ->scalarNode('client_secret')->defaultValue('')->end()
+                ->integerNode('cron_interval')->defaultValue(900)->end()
+                ->scalarNode('api_url')->defaultValue('https://api.getsparkle.io/')->end()
+            ->end()
+        ;
+
         return $treeBuilder;
     }
 }
