@@ -1,18 +1,10 @@
 <div class="sparkle slide-{{ikSlide.uniqueId}}" ng-style="{'font-size': theStyle.fontsize, 'width': theStyle.width, 'height': theStyle.height }">
-  <!-- Editor -->
-  <div ng-if="!ikSlide.external_data" class="sparkle-wrapper">
-    <div class="sparkle-section sparkle-media-section" ng-style="{'background-image': 'url(' + ikSlide.options.firstElement.mediaUrl.replace('?size=l', '?size=m') + ')'}">
-    </div>
-    <div class="sparkle-section sparkle-info-section">
-      <div class="sparkle-author-section">{{ikSlide.options.firstElement.username}}</div>
-      <div class="sparkle-text-section">
-        {{ikSlide.options.firstElement.text}}
-      </div>
-    </div>
-  </div>
   <!-- Live -->
-  <div ng-if="ikSlide.external_data" class="sparkle-wrapper" ng-style="{'flex-direction': ikSlide.direction}">
+  <div ng-if="ikSlide.external_data && ikSlide.currentItem" class="sparkle-wrapper" ng-style="{'flex-direction': ikSlide.direction}">
     <div class="sparkle-section sparkle-media-section" ng-style="{'background-image': 'url(' + ikSlide.currentItem.mediaUrl + ')'}">
+      <video style="width: 100%; height: 100%;" poster="{{ikSlide.currentItem.mediaUrl}}" id="sparkle-videoplayer-{{ikSlide.uniqueId}}" class="sparkle--video-player" ng-if="ikSlide.currentItem.videoUrl">
+        <source src="{{ikSlide.currentItem.videoUrl}}" type="video/mp4" />
+      </video>
     </div>
     <div class="sparkle-section">
       <div class="sparkle-author-section">{{ikSlide.currentItem.username}}</div>

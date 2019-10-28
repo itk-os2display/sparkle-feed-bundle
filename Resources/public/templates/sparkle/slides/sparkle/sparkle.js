@@ -34,21 +34,47 @@ if (!window.slideFunctions['sparkle']) {
         }
       };
 
+      slide.play = function (region, slide) {
+        if (slide.currentItem.videoUrl) {
+          region.$timeout(function () {
+            var video = document.getElementById('sparkle-videoplayer-' + slide.uniqueId);
+
+            video.removeEventListener('ended', video.onended);
+
+            // Go to the next slide when video playback has ended.
+            video.onended = function ended(event) {
+              region.itkLog.info("Video playback ended.", event);
+              region.$timeout(function () {
+                  slide.nextFeedItem(region, slide);
+                },
+                1000);
+            };
+
+            video.play();
+          });
+        }
+        else {
+          slide.feedTimeout(region, slide);
+        }
+      };
+
+      slide.nextFeedItem = function (region, slide) {
+        var newIndex = (slide.feedIndex + 1) % slide.numberOfItemsToDisplay;
+
+        if (newIndex === 0) {
+          region.nextSlide();
+          return;
+        }
+
+        slide.setDirection();
+        slide.feedIndex = newIndex;
+        slide.currentItem = slide.external_data[newIndex];
+        slide.play(region, slide);
+      };
+
       slide.feedTimeout = function (region, slide) {
         region.$timeout(function () {
-          var newIndex = (slide.feedIndex + 1) % slide.numberOfItemsToDisplay;
-
-          if (newIndex === 0) {
-            region.nextSlide();
-            return;
-          }
-
-          slide.setDirection();
-          slide.feedIndex = newIndex;
-
-          slide.currentItem = slide.external_data[newIndex];
-
-          slide.feedTimeout(region, slide);
+          slide.nextFeedItem(region, slide);
         }, slide.options.duration * 1000);
       };
     },
@@ -65,7 +91,6 @@ if (!window.slideFunctions['sparkle']) {
       region.itkLog.info("Running sparkle slide: " + slide.title);
 
       slide.feedIndex = 0;
-      slide.feedIndex = (slide.feedIndex + 1) % slide.external_data.length;
       slide.currentItem = slide.external_data[slide.feedIndex];
 
       slide.setDirection();
@@ -73,14 +98,9 @@ if (!window.slideFunctions['sparkle']) {
       // Wait fadeTime before start to account for fade in.
       region.$timeout(function () {
         // Set the progress bar animation.
-        region.progressBar.start(slide.options.duration * slide.numberOfItemsToDisplay);
+//        region.progressBar.start(slide.options.duration * slide.numberOfItemsToDisplay);
 
-        // Wait for slide duration, then show next slide.
-        // + fadeTime to account for fade out.
-        region.$timeout(
-          function () {
-            slide.feedTimeout(region, slide);
-          }, slide.options.duration * 1000);
+        slide.play(region, slide);
       }, region.fadeTime);
     }
   };

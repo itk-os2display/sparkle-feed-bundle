@@ -5,8 +5,8 @@
   "icon": "sparkle.png",
   "paths": {
     "live": "sparkle.html",
-    "edit": "sparkle.html",
-    "preview": "sparkle.html",
+    "edit": "sparkle-edit.html",
+    "preview": "sparkle-edit.html",
     "css": "sparkle.css",
     "js": "bundles/os2displaysparklefeed/templates/sparkle/slides/sparkle/sparkle.js"
   },
