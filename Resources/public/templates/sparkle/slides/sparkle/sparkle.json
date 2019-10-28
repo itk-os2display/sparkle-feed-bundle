@@ -8,7 +8,7 @@
     "edit": "sparkle.html",
     "preview": "sparkle.html",
     "css": "sparkle.css",
-    "js": "sparkle.js"
+    "js": "bundles/os2displaysparklefeed/templates/sparkle/slides/sparkle/sparkle.js"
   },
   "slide_type": "sparkle",
   "media_type": "image",
@@ -21,7 +21,9 @@
   "empty_options": {
     "fontsize": 16,
     "orientation": "landscape",
-    "selectedFeed": null
+    "selectedFeed": null,
+    "duration": 10,
+    "numberOfItems": null
   },
   "tools": [
     {

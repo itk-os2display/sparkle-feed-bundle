@@ -20,6 +20,16 @@
             <div ng-repeat="feed in feeds" ng-click="selectFeed(feed)" ng-style="{'color': feed.id === slide.options.selectedFeed ? 'green' : null}">{{feed.name}}</div>
           </div>
 
+          <div class="itk-template-extension--tool-section" ng-if="!saving">
+            <h2 class="itk-template-extension--tool-headline">Indstillinger</h2>
+
+            <label for="timePerItem">Hvor mange sekunder skal hver element vises?</label>
+            <input id="timePerItem" type="number" min="1" ng-model="slide.options.duration">
+
+            <label for="numberOfItems">Hvor mange elementer skal vises efter hinanden før næste slide bliver vist?</label>
+            <input id="numberOfItems" type="number" min="1" ng-model="slide.options.numberOfItems">
+          </div>
+
           <div ng-if="saving">Saving...</div>
 
           <div class="itk-template-extension--button" data-ng-click="closeTool()">
