@@ -13,6 +13,8 @@ if (!window.slideFunctions['sparkle']) {
      *   The slide scope.
      */
     setup: function setupSparkleSlide(scope) {
+      'use strict';
+
       var slide = scope.ikSlide;
 
       // Setup the inline styling
@@ -37,12 +39,11 @@ if (!window.slideFunctions['sparkle']) {
       slide.play = function (region, slide) {
         if (slide.currentItem.videoUrl) {
           region.$timeout(function () {
-            var video = document.getElementById('sparkle-videoplayer-' + slide.uniqueId);
+            slide.video = document.getElementById('sparkle-videoplayer-' + slide.uniqueId);
 
-            video.removeEventListener('ended', video.onended);
-
-            // Go to the next slide when video playback has ended.
-            video.onended = function ended(event) {
+            // Handle video ended.
+            slide.video.removeEventListener('ended', slide.video.onended);
+            slide.video.onended = function ended(event) {
               region.itkLog.info("Video playback ended.", event);
               region.$timeout(function () {
                   slide.nextFeedItem(region, slide);
@@ -50,7 +51,15 @@ if (!window.slideFunctions['sparkle']) {
                 1000);
             };
 
-            video.play();
+            // Add/refresh error handling.
+            slide.video.removeEventListener('error', slide.video.onerror);
+            slide.video.onerror = function videoErrorHandling(event) {
+              region.itkLog.info('Video playback error.', event);
+              slide.video.removeEventListener('error', videoErrorHandling);
+              slide.nextFeedItem(region, slide);
+            };
+
+            slide.video.play();
           });
         }
         else {
@@ -88,6 +97,8 @@ if (!window.slideFunctions['sparkle']) {
      *   The region object.
      */
     run: function runSparkleSlide(slide, region) {
+      'use strict';
+
       region.itkLog.info("Running sparkle slide: " + slide.title);
 
       slide.feedIndex = 0;
@@ -95,11 +106,7 @@ if (!window.slideFunctions['sparkle']) {
 
       slide.setDirection();
 
-      // Wait fadeTime before start to account for fade in.
       region.$timeout(function () {
-        // Set the progress bar animation.
-//        region.progressBar.start(slide.options.duration * slide.numberOfItemsToDisplay);
-
         slide.play(region, slide);
       }, region.fadeTime);
     }
