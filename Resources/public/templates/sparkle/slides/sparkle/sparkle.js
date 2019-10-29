@@ -101,9 +101,10 @@ if (!window.slideFunctions['sparkle']) {
 
       region.itkLog.info("Running sparkle slide: " + slide.title);
 
+      slide.feedIndex = 0;
+      slide.currentItem = slide.external_data[slide.feedIndex];
+
       region.$timeout(function () {
-        slide.feedIndex = 0;
-        slide.currentItem = slide.external_data[slide.feedIndex];
         slide.setDirection();
         slide.play(region, slide);
       }, region.fadeTime);

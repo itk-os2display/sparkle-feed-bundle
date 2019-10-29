@@ -10,6 +10,7 @@
     </div>
     <div class="sparkle-section sparkle-info-section">
       <div class="sparkle-author-section">{{ikSlide.options.firstElement.username}}</div>
+      <div class="sparkle-created-section">{{ikSlide.currentItem.createdTime|date}}</div>
       <div class="sparkle-text-section" ng-bind-html="ikSlide.options.firstElement.textMarkup"></div>
     </div>
   </div>
