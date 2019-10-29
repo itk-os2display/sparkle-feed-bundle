@@ -125,6 +125,7 @@ class SparkleFeedService
     {
         return (object) [
             'text' => $item->text,
+            'textMarkup' => preg_replace('/(#\S+)/', '<span class="hashtag">${1}</span>', $item->text),
             'mediaUrl' => $item->mediaUrl,
             'videoUrl' => $item->videoUrl,
             'username' => $item->username,
@@ -160,8 +161,15 @@ class SparkleFeedService
             );
 
             $contents = $res->getBody()->getContents();
+            $arr = json_decode($contents);
 
-            return json_decode($contents);
+            $res = [];
+
+            foreach ($arr->items as $item) {
+                $res[] = $this->getFeedItemObject($item);
+            }
+
+            return $res;
         } catch (GuzzleException $exception) {
             return false;
         }

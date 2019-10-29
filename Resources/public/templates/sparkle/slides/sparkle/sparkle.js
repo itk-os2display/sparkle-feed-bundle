@@ -37,6 +37,7 @@ if (!window.slideFunctions['sparkle']) {
       };
 
       slide.play = function (region, slide) {
+        slide.setDirection();
         if (slide.currentItem.videoUrl) {
           region.$timeout(function () {
             slide.video = document.getElementById('sparkle-videoplayer-' + slide.uniqueId);
@@ -48,7 +49,7 @@ if (!window.slideFunctions['sparkle']) {
               region.$timeout(function () {
                   slide.nextFeedItem(region, slide);
                 },
-                1000);
+              1000);
             };
 
             // Add/refresh error handling.
@@ -75,7 +76,6 @@ if (!window.slideFunctions['sparkle']) {
           return;
         }
 
-        slide.setDirection();
         slide.feedIndex = newIndex;
         slide.currentItem = slide.external_data[newIndex];
         slide.play(region, slide);
@@ -101,12 +101,10 @@ if (!window.slideFunctions['sparkle']) {
 
       region.itkLog.info("Running sparkle slide: " + slide.title);
 
-      slide.feedIndex = 0;
-      slide.currentItem = slide.external_data[slide.feedIndex];
-
-      slide.setDirection();
-
       region.$timeout(function () {
+        slide.feedIndex = 0;
+        slide.currentItem = slide.external_data[slide.feedIndex];
+        slide.setDirection();
         slide.play(region, slide);
       }, region.fadeTime);
     }

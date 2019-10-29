@@ -20,6 +20,9 @@
   },
   "empty_options": {
     "fontsize": 16,
+    "bgcolor": "#fff",
+    "color": "#000",
+    "hashtagcolor": "#000",
     "orientation": "landscape",
     "selectedFeed": null,
     "duration": 10,

@@ -28,6 +28,21 @@
 
             <label for="numberOfItems">Hvor mange elementer skal vises efter hinanden før næste slide bliver vist?</label>
             <input id="numberOfItems" type="number" min="1" ng-model="slide.options.numberOfItems">
+
+            <label for="backgroundColor">Baggrundsfarve</label>
+            <input id="backgroundColor" colorpicker="hex" class="form-slide-background-background-color edit-menu--background-form-element"
+                   type="text" placeholder="e.g. #fff" ng-model="slide.options.bgcolor"
+                   data-ng-style="{'background-color': slide.options.bgcolor}">
+
+            <label for="textColor">Tekstfarve</label>
+            <input id="textColor" colorpicker="hex" class="form-slide-background-background-color edit-menu--background-form-element"
+                   type="text" placeholder="e.g. #000" ng-model="slide.options.color"
+                   data-ng-style="{'background-color': slide.options.color}">
+
+            <label for="hashtagColor">Hashtagfarve</label>
+            <input id="hashtagColor" colorpicker="hex" class="form-slide-background-background-color edit-menu--background-form-element"
+                   type="text" placeholder="e.g. #000" ng-model="slide.options.hashtagcolor"
+                   data-ng-style="{'background-color': slide.options.hashtagcolor}">
           </div>
 
           <div ng-if="saving">Saving...</div>

@@ -39,10 +39,11 @@ angular.module('sparkleModule').directive('sparkle', [
           $http.get("/sparkle/feed/" + scope.slide.options.selectedFeed).then(
             function success(response) {
               $timeout(function () {
-                if (response.data.feeds.items.length > 0) {
-                  var first = response.data.feeds.items[0];
+                if (response.data.length > 0) {
+                  var first = response.data[0];
                   scope.slide.options.firstElement = {
                     'text': first.text,
+                    'textMarkup': first.textMarkup,
                     'mediaUrl': first.mediaUrl,
                     'videoUrl': first.videoUrl,
                     'username': first.username,
