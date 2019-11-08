@@ -100,15 +100,15 @@ class SparkleFeedService
         $feed = $this->getFeed($selectedFeedId);
 
         // Set first element from feed for display in administration.
-        if (count($feed->items) > 0) {
-            $options['firstElement'] = $this->getFeedItemObject($feed->items[0]);
+        if (count($feed) > 0) {
+            $options['firstElement'] = $this->getFeedItemObject($feed[0]);
         }
 
         $slide->setOptions($options);
 
         $feedItems = [];
 
-        foreach ($feed->items as $item) {
+        foreach ($feed as $item) {
             $feedItems[] = $this->getFeedItemObject($item);
         }
 
@@ -125,12 +125,55 @@ class SparkleFeedService
     {
         return (object) [
             'text' => $item->text,
-            'textMarkup' => preg_replace('/(#\S+)/', '<span class="hashtag">${1}</span>', $item->text),
+            'textMarkup' => $this->applyHashtagMarkup($item->text),
             'mediaUrl' => $item->mediaUrl,
             'videoUrl' => $item->videoUrl,
             'username' => $item->username,
             'createdTime' => $item->createdTime,
         ];
+    }
+
+    private function applyHashtagMarkup($text)
+    {
+        $words = explode(" ", $text);
+
+        $flippedWords = array_reverse($words);
+
+        $textHashtagMarkup = '';
+
+        $finishedSearchingForHashtagSection = false;
+        $foundHashtags = 0;
+
+        foreach ($flippedWords as $word) {
+            if ($finishedSearchingForHashtagSection) {
+                if (preg_match('/^#(\S!#)+$/', $word)) {
+                    $textHashtagMarkup = '<span class="sparkle-hashtag">'.$word.'</span> '.$textHashtagMarkup;
+                }
+                else {
+                    $textHashtagMarkup = $word . ' ' . $textHashtagMarkup;
+                }
+            }
+            else {
+                if (preg_match('/(#\S+)/', $word)) {
+                    if ($foundHashtags === 0) {
+                        $textHashtagMarkup = '</div>';
+                    }
+                    $textHashtagMarkup = '<span class="sparkle-hashtag">'.$word.'</span> '.$textHashtagMarkup;
+                    $foundHashtags++;
+                }
+                else {
+                    if ($foundHashtags > 0) {
+                        $textHashtagMarkup = '<div class="sparkle-hashtag-section">'. $textHashtagMarkup;
+                    }
+                    $finishedSearchingForHashtagSection = true;
+
+                    $textHashtagMarkup = $word . ' ' . $textHashtagMarkup;
+                }
+            }
+
+        }
+
+        return $textHashtagMarkup;
     }
 
     /**

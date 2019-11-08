@@ -17,7 +17,10 @@
           <div class="itk-template-extension--tool-section" ng-if="!saving">
             <h2 class="itk-template-extension--tool-headline">Vælg feed</h2>
 
-            <div ng-repeat="feed in feeds" ng-click="selectFeed(feed)" ng-style="{'color': feed.id === slide.options.selectedFeed ? 'green' : null}">{{feed.name}}</div>
+            <div ng-repeat="feed in feeds" ng-click="selectFeed(feed)" style="cursor: pointer;">
+              <input type="checkbox" ng-checked="feed.id === slide.options.selectedFeed">
+              {{feed.name}}
+            </div>
           </div>
 
           <div class="itk-template-extension--tool-section" ng-if="!saving">
@@ -29,23 +32,26 @@
             <label for="numberOfItems">Hvor mange elementer skal vises efter hinanden før næste slide bliver vist?</label>
             <input id="numberOfItems" type="number" min="1" ng-model="slide.options.numberOfItems">
 
+            <label for="hashtag">Hashtag text</label>
+            <input id="hashtag" type="text" ng-model="slide.options.hashtagText">
+
             <label for="backgroundColor">Baggrundsfarve</label>
-            <input id="backgroundColor" colorpicker="hex" class="form-slide-background-background-color edit-menu--background-form-element"
+            <input id="backgroundColor" colorpicker="hex" class="form-slide-background-background-color"
                    type="text" placeholder="e.g. #fff" ng-model="slide.options.bgcolor"
                    data-ng-style="{'background-color': slide.options.bgcolor}">
 
             <label for="textColor">Tekstfarve</label>
-            <input id="textColor" colorpicker="hex" class="form-slide-background-background-color edit-menu--background-form-element"
+            <input id="textColor" colorpicker="hex" class="form-slide-background-background-color"
                    type="text" placeholder="e.g. #000" ng-model="slide.options.color"
                    data-ng-style="{'background-color': slide.options.color}">
 
             <label for="hashtagColor">Hashtagfarve</label>
-            <input id="hashtagColor" colorpicker="hex" class="form-slide-background-background-color edit-menu--background-form-element"
+            <input id="hashtagColor" colorpicker="hex" class="form-slide-background-background-color"
                    type="text" placeholder="e.g. #000" ng-model="slide.options.hashtagcolor"
                    data-ng-style="{'background-color': slide.options.hashtagcolor}">
           </div>
 
-          <div ng-if="saving">Saving...</div>
+          <div ng-if="saving">Lige et øjeblik...</div>
 
           <div class="itk-template-extension--button" data-ng-click="closeTool()">
             Afslut

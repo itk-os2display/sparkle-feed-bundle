@@ -24,6 +24,20 @@ if (!window.slideFunctions['sparkle']) {
         fontsize: slide.options.fontsize * (scope.scale ? scope.scale : 1.0)+ "px"
       };
 
+      slide.getDaysAgo = function (dateString) {
+        var date = new Date(dateString);
+        var today = new Date();
+
+        var difference = today.getTime() - date.getTime();
+        var daysAgo = parseInt(difference / 60 / 60 / 24 / 1000);
+
+        if (daysAgo === 0) {
+          return 'i dag';
+        }
+
+        return daysAgo + ' d.';
+      };
+
       slide.feedIndex = 0;
       slide.numberOfItemsToDisplay = Math.min(slide.options.numberOfItems, slide.external_data.length);
 

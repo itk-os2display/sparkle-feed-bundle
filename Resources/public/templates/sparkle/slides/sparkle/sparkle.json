@@ -23,6 +23,7 @@
     "bgcolor": "#fff",
     "color": "#000",
     "hashtagcolor": "#000",
+    "hashtagText": "",
     "orientation": "landscape",
     "selectedFeed": null,
     "duration": 10,
