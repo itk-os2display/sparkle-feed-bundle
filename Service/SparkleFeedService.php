@@ -125,7 +125,7 @@ class SparkleFeedService
     {
         return (object) [
             'text' => $item->text,
-            'textMarkup' => $this->applyHashtagMarkup($item->text),
+            'textMarkup' => $this->wrapTags($item->text),
             'mediaUrl' => $item->mediaUrl,
             'videoUrl' => $item->videoUrl,
             'username' => $item->username,
@@ -133,47 +133,28 @@ class SparkleFeedService
         ];
     }
 
-    private function applyHashtagMarkup($text)
+    public function wrapTags(string $input)
     {
-        $words = explode(" ", $text);
-
-        $flippedWords = array_reverse($words);
-
-        $textHashtagMarkup = '';
-
-        $finishedSearchingForHashtagSection = false;
-        $foundHashtags = 0;
-
-        foreach ($flippedWords as $word) {
-            if ($finishedSearchingForHashtagSection) {
-                if (preg_match('/^#(\S!#)+$/', $word)) {
-                    $textHashtagMarkup = '<span class="sparkle-hashtag">'.$word.'</span> '.$textHashtagMarkup;
-                }
-                else {
-                    $textHashtagMarkup = $word . ' ' . $textHashtagMarkup;
-                }
-            }
-            else {
-                if (preg_match('/(#\S+)/', $word)) {
-                    if ($foundHashtags === 0) {
-                        $textHashtagMarkup = '</div>';
-                    }
-                    $textHashtagMarkup = '<span class="sparkle-hashtag">'.$word.'</span> '.$textHashtagMarkup;
-                    $foundHashtags++;
-                }
-                else {
-                    if ($foundHashtags > 0) {
-                        $textHashtagMarkup = '<div class="sparkle-hashtag-section">'. $textHashtagMarkup;
-                    }
-                    $finishedSearchingForHashtagSection = true;
-
-                    $textHashtagMarkup = $word . ' ' . $textHashtagMarkup;
-                }
-            }
-
+        $text = trim($input);
+        // Collects trailing tags one by one.
+        $trailingTags = [];
+        $pattern = '/\s*#(?<tag>[^\s#]+)$/u';
+        while (preg_match($pattern, $text, $matches)) {
+            // We're getting tags in reverse order.
+            array_unshift($trailingTags, $matches['tag']);
+            $text = preg_replace($pattern, '', $text);
         }
+        // Wrap inline tags.
+        $pattern = '/(#(?<tag>[^\s#]+))/';
+        $text = '<div class="text">'.preg_replace($pattern,
+                '<span class="tag">\1</span>', $text).'</div>';
+        // Append tags.
+        $text .= PHP_EOL.'<div class="tags">'.implode(' ',
+                array_map(function ($tag) {
+                    return '<span class="tag">#'.$tag.'</span>';
+                }, $trailingTags)).'</div>';
 
-        return $textHashtagMarkup;
+        return $text;
     }
 
     /**
