@@ -1,0 +1,26 @@
+{
+  "name": "os2displaysparklefeed",
+  "description": "",
+  "version": "0.1.1",
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-header": "^2.0.9",
+    "gulp-if": "^3.0.0",
+    "gulp-jshint": "^2.1.0",
+    "gulp-ng-annotate": "^2.1.0",
+    "gulp-notify": "^3.2.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-uglify": "^3.0.2",
+    "gulp-util": "^3.0.8",
+    "js-yaml": "^3.13.1",
+    "jshint": "^2.10.3",
+    "jshint-stylish": "^2.2.1",
+    "yargs": "^14.2.0"
+  },
+  "scripts": {
+    "gulp": "node_modules/gulp/bin/gulp.js"
+  }
+}
