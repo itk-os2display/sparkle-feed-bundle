@@ -1,7 +1,7 @@
 services:
     os2display.sparkle_feed.service:
         class: Os2Display\SparkleFeedBundle\Service\SparkleFeedService
-        arguments: [900, 'https://api.getsparkle.io/', '', '', '@os2display.sparkle_feed.cache', '@doctrine.orm.entity_manager']
+        arguments: [900, 'https://api.getsparkle.io/', '', '', '@os2display.sparkle_feed.cache', '@doctrine.orm.entity_manager', '@logger']
         tags:
             - { name: kernel.event_listener, event: ik.cron, method: onCron }
 
