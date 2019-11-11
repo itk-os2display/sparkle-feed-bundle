@@ -9,6 +9,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use Os2Display\CoreBundle\Entity\Slide;
 use Os2Display\CoreBundle\Events\CronEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class SparkleFeedService
@@ -24,6 +25,7 @@ class SparkleFeedService
     private $entityManager;
     private $cronInterval;
     private $apiUrl;
+    private $logger;
 
     /**
      * SparkleFeedService constructor.
@@ -33,15 +35,24 @@ class SparkleFeedService
      * @param $clientSecret
      * @param \Doctrine\Common\Cache\CacheProvider $cache
      * @param \Doctrine\ORM\EntityManagerInterface $entityManager
+     * @param Psr\Log\LoggerInterface $logger
      */
-    public function __construct(int $cronInterval, string $apiUrl, $clientId, $clientSecret, CacheProvider $cache, EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        int $cronInterval,
+        string $apiUrl,
+        $clientId,
+        $clientSecret,
+        CacheProvider $cache,
+        EntityManagerInterface $entityManager,
+        LoggerInterface $logger
+    ) {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->cache = $cache;
         $this->entityManager = $entityManager;
         $this->cronInterval = $cronInterval;
         $this->apiUrl = $apiUrl;
+        $this->logger = $logger;
     }
 
     /**
@@ -71,17 +82,23 @@ class SparkleFeedService
 
         /* @var Slide $slide */
         foreach ($slides as $slide) {
-            $options = $slide->getOptions();
-            $selectedFeedId = $options['selectedFeed'] ?? null;
+            try {
+                $options = $slide->getOptions();
+                $selectedFeedId = $options['selectedFeed'] ?? null;
 
-            if (isset($cache[$selectedFeedId])) {
-                $slide->setExternalData($cache[$selectedFeedId]);
+                if (isset($cache[$selectedFeedId])) {
+                    $slide->setExternalData($cache[$selectedFeedId]);
+                    continue;
+                }
+
+                $this->updateSlide($slide, $selectedFeedId);
+
+                $cache[$selectedFeedId] = $slide->getExternalData();
+            } catch (\Exception $e) {
+                // Catching all exceptions to avoid blocking cron.
+                $this->logger->error($e->getMessage());
                 continue;
             }
-
-            $this->updateSlide($slide, $selectedFeedId);
-
-            $cache[$selectedFeedId] = $slide->getExternalData();
         }
 
         $this->entityManager->flush();
@@ -123,7 +140,7 @@ class SparkleFeedService
      */
     private function getFeedItemObject($item)
     {
-        return (object) [
+        return (object)[
             'text' => $item->text,
             'textMarkup' => $this->wrapTags($item->text),
             'mediaUrl' => $item->mediaUrl,
@@ -212,7 +229,8 @@ class SparkleFeedService
      *
      * @return bool|mixed
      */
-    public function getFeeds() {
+    public function getFeeds()
+    {
         $token = $this->getToken();
 
         if (!$token) {
@@ -273,7 +291,8 @@ class SparkleFeedService
             $tokenResponse = $res->getBody()->getContents();
             $tokenDecoded = json_decode($tokenResponse);
 
-            $this->cache->save('access_token', $tokenDecoded->access_token, $tokenDecoded->expires_in - 1000);
+            $this->cache->save('access_token', $tokenDecoded->access_token,
+                $tokenDecoded->expires_in - 1000);
 
             return $tokenDecoded->access_token;
         } catch (GuzzleException $exception) {
