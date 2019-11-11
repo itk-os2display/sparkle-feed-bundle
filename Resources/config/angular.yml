@@ -1,7 +1,4 @@
 assets:
-    js: []
-    css: []
-    js_prod_assets: []
     js_prod:
         - bundles/os2displaysparklefeed/assets/build/os2displaysparklefeed.min.js
 
