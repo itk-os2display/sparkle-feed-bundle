@@ -1,0 +1,63 @@
+<div class="edit-menu--background" role="banner">
+  <div class="edit-menu--background-inner">
+    <div class="edit-menu--toggle-icon" data-ng-click="closeTool()">
+      <div class="svg-clickable">
+        <object data="bundles/os2displayadmin/images/svg/cancel.svg"
+                type="image/svg+xml">
+          <!-- Fallback (ie8)-->
+          <img src="bundles/os2displayadmin/images/cancel.png"/>
+        </object>
+      </div>
+    </div>
+    <div class="edit-menu--background-page">
+      <div class="edit-menu--background-page-inner">
+        <div class="itk-template-extension--content">
+          <h2 class="edit-menu--background-header">sparkle.io slideindstillinger</h2>
+
+          <div class="itk-template-extension--tool-section" ng-if="!saving">
+            <h2 class="itk-template-extension--tool-headline">Vælg feed</h2>
+
+            <div ng-repeat="feed in feeds" ng-click="selectFeed(feed)" style="cursor: pointer;">
+              <input type="checkbox" ng-checked="feed.id === slide.options.selectedFeed">
+              {{feed.name}}
+            </div>
+          </div>
+
+          <div class="itk-template-extension--tool-section" ng-if="!saving">
+            <h2 class="itk-template-extension--tool-headline">Indstillinger</h2>
+
+            <label for="timePerItem">Hvor mange sekunder skal hver element vises?</label>
+            <input id="timePerItem" type="number" min="1" ng-model="slide.options.duration">
+
+            <label for="numberOfItems">Hvor mange elementer skal vises efter hinanden før næste slide bliver vist?</label>
+            <input id="numberOfItems" type="number" min="1" ng-model="slide.options.numberOfItems">
+
+            <label for="hashtag">Hashtag text</label>
+            <input id="hashtag" type="text" ng-model="slide.options.hashtagText">
+
+            <label for="backgroundColor">Baggrundsfarve</label>
+            <input id="backgroundColor" colorpicker="hex" class="form-slide-background-background-color"
+                   type="text" placeholder="e.g. #fff" ng-model="slide.options.bgcolor"
+                   data-ng-style="{'background-color': slide.options.bgcolor}">
+
+            <label for="textColor">Tekstfarve</label>
+            <input id="textColor" colorpicker="hex" class="form-slide-background-background-color"
+                   type="text" placeholder="e.g. #000" ng-model="slide.options.color"
+                   data-ng-style="{'background-color': slide.options.color}">
+
+            <label for="hashtagColor">Hashtagfarve</label>
+            <input id="hashtagColor" colorpicker="hex" class="form-slide-background-background-color"
+                   type="text" placeholder="e.g. #000" ng-model="slide.options.hashtagcolor"
+                   data-ng-style="{'background-color': slide.options.hashtagcolor}">
+          </div>
+
+          <div ng-if="saving">Lige et øjeblik...</div>
+
+          <div class="itk-template-extension--button" data-ng-click="closeTool()">
+            Afslut
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

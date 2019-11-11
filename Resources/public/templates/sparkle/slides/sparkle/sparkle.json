@@ -1,0 +1,38 @@
+{
+  "id": "sparkle",
+  "type": "slide",
+  "name": "Sparkle.io feed",
+  "icon": "sparkle.png",
+  "paths": {
+    "live": "sparkle.html",
+    "edit": "sparkle-edit.html",
+    "preview": "sparkle-edit.html",
+    "css": "sparkle.css",
+    "js": "bundles/os2displaysparklefeed/templates/sparkle/slides/sparkle/sparkle.js"
+  },
+  "slide_type": "sparkle",
+  "media_type": "image",
+  "script_id": "sparkle",
+  "orientation": "landscape",
+  "ideal_dimensions": {
+    "width": "1920",
+    "height": "1080"
+  },
+  "empty_options": {
+    "fontsize": 16,
+    "bgcolor": "#fff",
+    "color": "#000",
+    "hashtagcolor": "#000",
+    "hashtagText": "",
+    "orientation": "landscape",
+    "selectedFeed": null,
+    "duration": 10,
+    "numberOfItems": null
+  },
+  "tools": [
+    {
+      "name": "Sparkle",
+      "id": "sparkle"
+    }
+  ]
+}
