@@ -90,9 +90,16 @@ if (!window.slideFunctions['sparkle']) {
           return;
         }
 
-        slide.feedIndex = newIndex;
-        slide.currentItem = slide.external_data[newIndex];
-        slide.play(region, slide);
+        region.$timeout(function () {
+          slide.fadeout = true;
+
+          region.$timeout(function () {
+            slide.fadeout = false;
+            slide.feedIndex = newIndex;
+            slide.currentItem = slide.external_data[newIndex];
+            slide.play(region, slide);
+          }, 200);
+        });
       };
 
       slide.feedTimeout = function (region, slide) {

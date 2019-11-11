@@ -136,14 +136,22 @@ class SparkleFeedService
     public function wrapTags(string $input)
     {
         $text = trim($input);
+
+        // Strip unicode zero-width-space.
+        $text = str_replace("\xE2\x80\x8B", "", $text);
+
         // Collects trailing tags one by one.
         $trailingTags = [];
-        $pattern = '/\s*#(?<tag>[^\s#]+)$/u';
+        $pattern = "/\s*#(?<tag>[^\s#]+)\n?$/u";
         while (preg_match($pattern, $text, $matches)) {
             // We're getting tags in reverse order.
             array_unshift($trailingTags, $matches['tag']);
             $text = preg_replace($pattern, '', $text);
         }
+
+        // Wrap sections in p tags.
+        $text = preg_replace("/(.+)\n?/u", '<p>\1</p>', $text);
+
         // Wrap inline tags.
         $pattern = '/(#(?<tag>[^\s#]+))/';
         $text = '<div class="text">'.preg_replace($pattern,

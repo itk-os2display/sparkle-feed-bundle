@@ -6,7 +6,7 @@
   </style>
   <!-- Live -->
   <div ng-if="ikSlide.external_data && ikSlide.currentItem" class="sparkle-wrapper" ng-class="{'sparkle-portrait': ikSlide.direction == 'column', 'sparkle-landscape': ikSlide.direction == 'row'}">
-    <div class="sparkle-section sparkle-media-section" ng-style="{'background-image': 'url(' + ikSlide.currentItem.mediaUrl + ')'}">
+    <div class="sparkle-section sparkle-media-section ng-animate-disabled" ng-style="{'background-image': 'url(' + ikSlide.currentItem.mediaUrl + ')'}" ng-class="{'fadeout': ikSlide.fadeout, 'fadein': ikSlide.fadeout === false}">
       <video style="width: 100%; height: 100%;" poster="{{ ikSlide.currentItem.mediaUrl }}" id="sparkle-videoplayer-{{ ikSlide.uniqueId }}" class="sparkle--video-player" ng-if="ikSlide.currentItem.videoUrl">
         <source src="{{ ikSlide.currentItem.videoUrl }}" type="video/mp4" />
       </video>
