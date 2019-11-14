@@ -18,7 +18,7 @@
             <h2 class="itk-template-extension--tool-headline">Vælg feed</h2>
 
             <div ng-repeat="feed in feeds" ng-click="selectFeed(feed)" style="cursor: pointer;">
-              <input type="checkbox" ng-checked="feed.id === slide.options.selectedFeed">
+              <input type="radio" name="feedSelect" ng-checked="feed.id === slide.options.selectedFeed">
               {{feed.name}}
             </div>
           </div>
