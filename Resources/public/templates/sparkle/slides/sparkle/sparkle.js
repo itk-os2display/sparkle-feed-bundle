@@ -52,6 +52,12 @@ if (!window.slideFunctions['sparkle']) {
 
       slide.play = function (region, slide) {
         slide.setDirection();
+
+        if (!slide.currentItem) {
+          region.nextSlide();
+          return;
+        }
+
         if (slide.currentItem.videoUrl) {
           region.$timeout(function () {
             slide.video = document.getElementById('sparkle-videoplayer-' + slide.uniqueId);
@@ -121,6 +127,11 @@ if (!window.slideFunctions['sparkle']) {
       'use strict';
 
       region.itkLog.info("Running sparkle slide: " + slide.title);
+
+      if (!slide.external_data || slide.external_data.length === 0) {
+        region.nextSlide();
+        return;
+      }
 
       slide.feedIndex = 0;
       slide.currentItem = slide.external_data[slide.feedIndex];

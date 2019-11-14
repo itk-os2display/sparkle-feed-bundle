@@ -23,7 +23,7 @@
             </div>
           </div>
 
-          <div class="itk-template-extension--tool-section" ng-if="!saving">
+          <div class="itk-template-extension--tool-section" ng-if="!saving" style="position: relative">
             <h2 class="itk-template-extension--tool-headline">Indstillinger</h2>
 
             <label for="timePerItem">Hvor mange sekunder skal hver element vises?</label>
@@ -32,21 +32,33 @@
             <label for="numberOfItems">Hvor mange elementer skal vises efter hinanden før næste slide bliver vist?</label>
             <input id="numberOfItems" type="number" min="1" ng-model="slide.options.numberOfItems">
 
-            <label for="hashtag">Hashtag text</label>
+            <label for="hashtag">Hashtag tekst</label>
             <input id="hashtag" type="text" ng-model="slide.options.hashtagText">
+
+            <style>
+              /* Colorpicker position hacks */
+              .colorpicker.colorpicker-fixed-position.colorpicker-position-bottom {
+                width: 100%;
+                top: 0 !important;
+                left: 0 !important;
+              }
+            </style>
 
             <label for="backgroundColor">Baggrundsfarve</label>
             <input id="backgroundColor" colorpicker="hex" class="form-slide-background-background-color"
-                   type="text" placeholder="e.g. #fff" ng-model="slide.options.bgcolor"
+                   colorpicker-fixed-position="true" colorpicker-parent="true" colorpicker-with-input="true"
+                   type="text" placeholder="e.g. #000" ng-model="slide.options.bgcolor"
                    data-ng-style="{'background-color': slide.options.bgcolor}">
 
             <label for="textColor">Tekstfarve</label>
             <input id="textColor" colorpicker="hex" class="form-slide-background-background-color"
+                   colorpicker-fixed-position="true" colorpicker-parent="true" colorpicker-with-input="true"
                    type="text" placeholder="e.g. #000" ng-model="slide.options.color"
                    data-ng-style="{'background-color': slide.options.color}">
 
             <label for="hashtagColor">Hashtagfarve</label>
             <input id="hashtagColor" colorpicker="hex" class="form-slide-background-background-color"
+                   colorpicker-fixed-position="true" colorpicker-parent="true" colorpicker-with-input="true"
                    type="text" placeholder="e.g. #000" ng-model="slide.options.hashtagcolor"
                    data-ng-style="{'background-color': slide.options.hashtagcolor}">
           </div>
