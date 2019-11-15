@@ -86,6 +86,10 @@ class SparkleFeedService
                 $options = $slide->getOptions();
                 $selectedFeedId = $options['selectedFeed'] ?? null;
 
+                if ($selectedFeedId == null) {
+                    continue;
+                }
+
                 if (isset($cache[$selectedFeedId])) {
                     $slide->setExternalData($cache[$selectedFeedId]);
                     continue;
@@ -94,6 +98,9 @@ class SparkleFeedService
                 $this->updateSlide($slide, $selectedFeedId);
 
                 $cache[$selectedFeedId] = $slide->getExternalData();
+            } catch (GuzzleException $e) {
+                $this->logger->error($e->getMessage());
+                continue;
             } catch (\Exception $e) {
                 // Catching all exceptions to avoid blocking cron.
                 $this->logger->error($e->getMessage());
@@ -109,6 +116,7 @@ class SparkleFeedService
      *
      * @param \Os2Display\CoreBundle\Entity\Slide $slide
      * @param $selectedFeedId
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function updateSlide(Slide $slide, $selectedFeedId)
     {
@@ -185,10 +193,11 @@ class SparkleFeedService
     /**
      * Get a feed by id.
      *
-     * @param $id
-     * @return bool|mixed
+     * @param int $id
+     * @return bool|array
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getFeed($id)
+    public function getFeed(int $id)
     {
         $token = $this->getToken();
 
@@ -196,38 +205,36 @@ class SparkleFeedService
             return false;
         }
 
-        try {
-            $client = new Client();
-            $res = $client->request(
-                'GET',
-                $this->apiUrl.'v0.1/feed/'.$id,
-                [
-                    'timeout' => 2,
-                    'headers' => [
-                        'Authorization' => sprintf('Bearer %s', $token),
-                    ],
-                ]
-            );
+        $client = new Client();
+        $res = $client->request(
+            'GET',
+            $this->apiUrl.'v0.1/feed/'.$id,
+            [
+                'timeout' => 2,
+                'headers' => [
+                    'Authorization' => sprintf('Bearer %s', $token),
+                ],
+            ]
+        );
 
-            $contents = $res->getBody()->getContents();
-            $arr = json_decode($contents);
+        $contents = $res->getBody()->getContents();
 
-            $res = [];
+        $arr = json_decode($contents);
 
-            foreach ($arr->items as $item) {
-                $res[] = $this->getFeedItemObject($item);
-            }
+        $res = [];
 
-            return $res;
-        } catch (GuzzleException $exception) {
-            return false;
+        foreach ($arr->items as $item) {
+            $res[] = $this->getFeedItemObject($item);
         }
+
+        return $res;
     }
 
     /**
      * Get list of available feeds.
      *
-     * @return bool|mixed
+     * @return bool|array
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getFeeds()
     {
@@ -237,25 +244,21 @@ class SparkleFeedService
             return false;
         }
 
-        try {
-            $client = new Client();
-            $res = $client->request(
-                'GET',
-                $this->apiUrl.'v0.1/feed',
-                [
-                    'timeout' => 2,
-                    'headers' => [
-                        'Authorization' => sprintf('Bearer %s', $token),
-                    ],
-                ]
-            );
+        $client = new Client();
+        $res = $client->request(
+            'GET',
+            $this->apiUrl.'v0.1/feed',
+            [
+                'timeout' => 2,
+                'headers' => [
+                    'Authorization' => sprintf('Bearer %s', $token),
+                ],
+            ]
+        );
 
-            $contents = $res->getBody()->getContents();
+        $contents = $res->getBody()->getContents();
 
-            return json_decode($contents);
-        } catch (GuzzleException $exception) {
-            return false;
-        }
+        return json_decode($contents);
     }
 
     /**
@@ -296,6 +299,7 @@ class SparkleFeedService
 
             return $tokenDecoded->access_token;
         } catch (GuzzleException $exception) {
+            $this->logger->error('SparkleFeed: Error authenticating. '.$exception->getMessage());
             return false;
         }
     }
