@@ -87,6 +87,7 @@ class SparkleFeedService
                 $selectedFeedId = $options['selectedFeed'] ?? null;
 
                 if ($selectedFeedId == null) {
+                    $slide->setExternalData([]);
                     continue;
                 }
 
