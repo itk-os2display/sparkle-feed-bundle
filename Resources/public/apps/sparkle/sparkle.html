@@ -42,25 +42,47 @@
                 top: 0 !important;
                 left: 0 !important;
               }
+
+              .sparkle-tool-text-shadow {
+                text-shadow: 1px 1px 2px white;
+              }
             </style>
 
             <label for="backgroundColor">Baggrundsfarve</label>
-            <input id="backgroundColor" colorpicker="hex" class="form-slide-background-background-color"
+            <input id="backgroundColor" colorpicker="hex" class="form-slide-background-background-color sparkle-tool-text-shadow"
                    colorpicker-fixed-position="true" colorpicker-parent="true" colorpicker-with-input="true"
                    type="text" placeholder="e.g. #000" ng-model="slide.options.bgcolor"
                    data-ng-style="{'background-color': slide.options.bgcolor}">
 
             <label for="textColor">Tekstfarve</label>
-            <input id="textColor" colorpicker="hex" class="form-slide-background-background-color"
+            <input id="textColor" colorpicker="hex" class="form-slide-background-background-color sparkle-tool-text-shadow"
                    colorpicker-fixed-position="true" colorpicker-parent="true" colorpicker-with-input="true"
                    type="text" placeholder="e.g. #000" ng-model="slide.options.color"
                    data-ng-style="{'background-color': slide.options.color}">
 
             <label for="hashtagColor">Hashtagfarve</label>
-            <input id="hashtagColor" colorpicker="hex" class="form-slide-background-background-color"
+            <input id="hashtagColor" colorpicker="hex" class="form-slide-background-background-color sparkle-tool-text-shadow"
                    colorpicker-fixed-position="true" colorpicker-parent="true" colorpicker-with-input="true"
                    type="text" placeholder="e.g. #000" ng-model="slide.options.hashtagcolor"
                    data-ng-style="{'background-color': slide.options.hashtagcolor}">
+
+            <label for="brandColor">Brandfarve</label>
+            <input id="brandColor" colorpicker="hex" class="form-slide-background-background-color sparkle-tool-text-shadow"
+                   colorpicker-fixed-position="true" colorpicker-parent="true" colorpicker-with-input="true"
+                   type="text" placeholder="e.g. #000" ng-model="slide.options.brand_text_color"
+                   data-ng-style="{'background-color': slide.options.brand_text_color}">
+
+            <label for="brandBgColor">Brand baggrundsfarve</label>
+            <input id="brandBgColor" colorpicker="hex" class="form-slide-background-background-color sparkle-tool-text-shadow"
+                   colorpicker-fixed-position="true" colorpicker-parent="true" colorpicker-with-input="true"
+                   type="text" placeholder="e.g. #000" ng-model="slide.options.brand_bg_color"
+                   data-ng-style="{'background-color': slide.options.brand_bg_color}">
+          </div>
+          <div class="itk-template-extension--tool-section" ng-if="!saving">
+            <h2 class="itk-template-extension--tool-headline">Avanceret</h2>
+
+            <label for="imageWidth">Billedestørrelse (%)</label>
+            <input id="imageWidth" type="number" min="1" ng-model="slide.options.image_width">
           </div>
 
           <div ng-if="saving">Lige et øjeblik...</div>

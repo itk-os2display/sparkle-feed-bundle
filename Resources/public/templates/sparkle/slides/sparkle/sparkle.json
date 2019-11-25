@@ -24,7 +24,10 @@
     "color": "#000",
     "hashtagcolor": "#000",
     "hashtagText": "",
+    "brand_bg_color": "#f1f1f1",
+    "brand_text_color": "#585858",
     "orientation": "landscape",
+    "image_width": 56.25,
     "selectedFeed": null,
     "duration": 10,
     "numberOfItems": null
