@@ -7,9 +7,13 @@
   <!-- Live -->
   <div ng-if="ikSlide.external_data && ikSlide.currentItem !== undefined" class="sparkle-wrapper" ng-class="{'sparkle-portrait': ikSlide.direction == 'column', 'sparkle-landscape': ikSlide.direction == 'row'}">
     <div class="sparkle-section sparkle-media-section ng-animate-disabled"
-         ng-style="{'background-image': !ikSlide.currentItem.videoUrl && 'url(' + ikSlide.currentItem.mediaUrl + ')', 'flex-basis': ikSlide.options.image_width ? ikSlide.options.image_width + '%' : '56.25%'}"
+         ng-style="{
+           'background-image': !ikSlide.currentItem.videoUrl && 'url(' + ikSlide.currentItem.mediaUrl + ')',
+           'height': ikSlide.direction == 'column' ? (ikSlide.options.image_width ? ikSlide.options.image_width + '%' : '56.25%') : null,
+           'width': ikSlide.direction == 'row' ? (ikSlide.options.image_width ? ikSlide.options.image_width + '%' : '56.25%') : null
+         }"
          ng-class="{'fadeout': ikSlide.fadeout, 'fadein': ikSlide.fadeout === false}">
-      <div class="sparkle--video-player-container">
+      <div class="sparkle--video-player-container" ng-if="ikSlide.direction">
         <video poster="" id="sparkle-videoplayer-{{ ikSlide.uniqueId }}" class="sparkle--video-player" ng-if="ikSlide.currentItem.videoUrl"
                ng-style="{'height': (ikSlide.direction == 'column' ? (ikSlide.options.image_width ? ikSlide.options.image_width + '%' : '56.25%') : null), 'position': ikSlide.direction == 'column' ? 'absolute' : null}"
         >
@@ -17,7 +21,10 @@
         </video>
       </div>
     </div>
-    <div class="sparkle-section sparkle-info-section" ng-style="{'flex-basis': ikSlide.options.image_width ? (100 - ikSlide.options.image_width) + '%' : '43.75%'}">
+    <div class="sparkle-section sparkle-info-section" ng-style="{
+         'height': ikSlide.direction == 'column' ? (ikSlide.options.image_width ? (100 - ikSlide.options.image_width) + '%' : '43.75%') : null,
+         'width': ikSlide.direction == 'row' ? (ikSlide.options.image_width ? (100 - ikSlide.options.image_width) + '%' : '43.75%') : null
+      }">
       <div class="sparkle-info-section--inner">
         <div class="sparkle-author-section">
           <span class="sparkle-author">{{ ikSlide.currentItem.username }}</span>

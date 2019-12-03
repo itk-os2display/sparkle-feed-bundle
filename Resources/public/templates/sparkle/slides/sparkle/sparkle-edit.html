@@ -5,15 +5,22 @@
     }
   </style>
   <!-- Editor -->
-  <div ng-if="!ikSlide.external_data" class="sparkle-wrapper">
-    <div class="sparkle-section sparkle-media-section sparkle-landscape" ng-style="{'background-image': 'url(' + ikSlide.options.firstElement.mediaUrl.replace('?size=l', '?size=m') + ')', 'flex-basis': ikSlide.options.image_width ? ikSlide.options.image_width + '%' : '56.25%'}">
+  <div ng-if="!ikSlide.external_data" class="sparkle-wrapper  sparkle-landscape">
+    <div class="sparkle-section sparkle-media-section"
+        ng-style="{
+         'background-image': 'url(' + ikSlide.options.firstElement.mediaUrl.replace('?size=l', '?size=m') + ')',
+         'width': ikSlide.options.image_width ? ikSlide.options.image_width + '%' : '56.25%'
+        }"
+    >
     </div>
-    <div class="sparkle-section sparkle-info-section" ng-style="{'flex-basis': ikSlide.options.image_width ? (100 - ikSlide.options.image_width) + '%' : '43.75%'}">
-      <div class="sparkle-author-section">
-        <span class="sparkle-author">{{ikSlide.options.firstElement.username}}</span>
-        <span class="sparkle-date"></span>
+    <div class="sparkle-section sparkle-info-section" ng-style="{'width': ikSlide.options.image_width ? (100 - ikSlide.options.image_width) + '%' : '43.75%'}">
+      <div class="sparkle-info-section--inner">
+        <div class="sparkle-author-section">
+          <span class="sparkle-author">{{ikSlide.options.firstElement.username}}</span>
+          <span class="sparkle-date"></span>
+        </div>
+        <div class="sparkle-text-section" ng-bind-html="ikSlide.options.firstElement.textMarkup"></div>
       </div>
-      <div class="sparkle-text-section" ng-bind-html="ikSlide.options.firstElement.textMarkup"></div>
     </div>
     <div class="sparkle-brand">
       <div class="sparkle-brand-insta-icon">
