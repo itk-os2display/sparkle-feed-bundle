@@ -7,10 +7,12 @@
   <!-- Live -->
   <div ng-if="ikSlide.external_data && ikSlide.currentItem !== undefined" class="sparkle-wrapper" ng-class="{'sparkle-portrait': ikSlide.direction == 'column', 'sparkle-landscape': ikSlide.direction == 'row'}">
     <div class="sparkle-section sparkle-media-section ng-animate-disabled"
-         ng-style="{'background-image': !ikSlide.currentItem.videoUrl && 'url(' + ikSlide.currentItem.mediaUrl + ')'}"
+         ng-style="{'background-image': !ikSlide.currentItem.videoUrl && 'url(' + ikSlide.currentItem.mediaUrl + ')', 'flex-basis': ikSlide.options.image_width ? ikSlide.options.image_width + '%' : '56.25%'}"
          ng-class="{'fadeout': ikSlide.fadeout, 'fadein': ikSlide.fadeout === false}">
       <div class="sparkle--video-player-container">
-        <video poster="" id="sparkle-videoplayer-{{ ikSlide.uniqueId }}" class="sparkle--video-player" ng-if="ikSlide.currentItem.videoUrl">
+        <video poster="" id="sparkle-videoplayer-{{ ikSlide.uniqueId }}" class="sparkle--video-player" ng-if="ikSlide.currentItem.videoUrl"
+               ng-style="{'height': (ikSlide.direction == 'column' ? (ikSlide.options.image_width ? ikSlide.options.image_width + '%' : '56.25%') : null), 'position': ikSlide.direction == 'column' ? 'absolute' : null}"
+        >
           <source ng-src="{{ ikSlide.currentItem.videoUrl }}" type="video/mp4" />
         </video>
       </div>

@@ -13,6 +13,7 @@
   background-color: #fff;
   color: #000;
   font-family: 'Gibson Regular', Arial, sans-serif;
+  position: relative;
 }
 
 .sparkle-wrapper {
@@ -23,12 +24,13 @@
 }
 
 .sparkle-section {
- /* flex-basis: 50%; */
   height: 100%;
 }
 
 .sparkle-media-section {
   flex-basis: 56.25%;
+  flex-grow: 0;
+  flex-shrink: 0;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -49,10 +51,15 @@
 .sparkle-info-section {
   height: 100%;
   flex-basis: 43.75%;
+  flex-grow: 0;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   text-align: left;
   z-index: 1;
+}
+
+.sparkle-info-section--inner {
   padding: 3em 5em;
 }
 
@@ -142,14 +149,4 @@
 .sparkle-portrait .sparkle-brand {
   width: 100%;
   bottom: 2.5%;
-}
-
-.sparkle-portrait .sparkle--video-player-container {
-  width: 100%;
-  height: auto;
-}
-
-.sparkle-portrait .sparkle--video-player {
-  width: 100%;
-  height: auto;
 }
