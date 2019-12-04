@@ -11,7 +11,7 @@
     "js": "bundles/os2displaysparklefeed/templates/sparkle/slides/sparkle/sparkle.js"
   },
   "slide_type": "sparkle",
-  "media_type": "image",
+  "media_type": "mixed",
   "script_id": "sparkle",
   "orientation": "landscape",
   "ideal_dimensions": {
@@ -19,6 +19,7 @@
     "height": "1080"
   },
   "empty_options": {
+    "disable_duration": true,
     "fontsize": 16,
     "bgcolor": "#fff",
     "color": "#000",
