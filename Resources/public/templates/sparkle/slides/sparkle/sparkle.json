@@ -11,7 +11,7 @@
     "js": "bundles/os2displaysparklefeed/templates/sparkle/slides/sparkle/sparkle.js"
   },
   "slide_type": "sparkle",
-  "media_type": "image",
+  "media_type": "mixed",
   "script_id": "sparkle",
   "orientation": "landscape",
   "ideal_dimensions": {
@@ -19,12 +19,16 @@
     "height": "1080"
   },
   "empty_options": {
+    "disable_duration": true,
     "fontsize": 16,
     "bgcolor": "#fff",
     "color": "#000",
     "hashtagcolor": "#000",
     "hashtagText": "",
+    "brand_bg_color": "#f1f1f1",
+    "brand_text_color": "#585858",
     "orientation": "landscape",
+    "image_width": 56.25,
     "selectedFeed": null,
     "duration": 10,
     "numberOfItems": null
