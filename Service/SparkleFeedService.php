@@ -26,6 +26,7 @@ class SparkleFeedService
     private $cronInterval;
     private $apiUrl;
     private $logger;
+    private $disabled;
 
     /**
      * SparkleFeedService constructor.
@@ -35,7 +36,7 @@ class SparkleFeedService
      * @param $clientSecret
      * @param \Doctrine\Common\Cache\CacheProvider $cache
      * @param \Doctrine\ORM\EntityManagerInterface $entityManager
-     * @param Psr\Log\LoggerInterface $logger
+     * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(
         int $cronInterval,
@@ -53,6 +54,10 @@ class SparkleFeedService
         $this->cronInterval = $cronInterval;
         $this->apiUrl = $apiUrl;
         $this->logger = $logger;
+
+        if (!$clientId || !$clientSecret) {
+            $this->disabled = true;
+        }
     }
 
     /**
@@ -60,6 +65,11 @@ class SparkleFeedService
      */
     public function onCron(CronEvent $cronEvent)
     {
+        // Bail out if the service is not enabled.
+        if ($this->disabled) {
+            return;
+        }
+
         $lastCron = $this->cache->fetch('last_cron');
         $timestamp = \time();
 
@@ -200,6 +210,10 @@ class SparkleFeedService
      */
     public function getFeed(int $id)
     {
+        if ($this->disabled) {
+            return [];
+        }
+
         $token = $this->getToken();
 
         if (!$token) {
@@ -239,6 +253,10 @@ class SparkleFeedService
      */
     public function getFeeds()
     {
+        if ($this->disabled) {
+            return [];
+        }
+
         $token = $this->getToken();
 
         if (!$token) {
