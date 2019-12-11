@@ -13,22 +13,19 @@
   background-color: #fff;
   color: #000;
   font-family: 'Gibson Regular', Arial, sans-serif;
+  position: relative;
 }
 
 .sparkle-wrapper {
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: row;
 }
 
 .sparkle-section {
-  flex-basis: 50%;
   height: 100%;
 }
 
 .sparkle-media-section {
-  flex-basis: 56.25%;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -48,38 +45,45 @@
 
 .sparkle-info-section {
   height: 100%;
-  flex-basis: 43.75%;
-  display: flex;
-  flex-direction: column;
   text-align: left;
   z-index: 1;
-  padding: 3em;
+}
+
+.sparkle-info-section--inner {
+  padding: 3em 5em;
 }
 
 .sparkle-text-section {
-  font-size: 2em;
+  font-size: 2.25em;
   line-height: 1.5;
 }
 
 .sparkle-author-section {
   margin-bottom: 1.5em;
+  width: 100%;
+
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
 }
 
 .sparkle-author {
-  font-size: 3em;
+  font-size: 4em;
   font-weight: bold;
   font-family: 'Gibson SemiBold', Arial, sans-serif;
 }
 
 .sparkle-date {
-  font-size: 2em;
+  font-size: 2.25em;
   color: #858585;
-  padding-left: 1em;
-  font-family: 'Gibson SemiBold', Arial, sans-serif;
+  padding-left: .5em;
+  font-family: 'Gibson Regular', Arial, sans-serif;
 }
 
 .sparkle .tags {
-  font-size: .8em;
   margin-top: 1em;
 }
 
@@ -115,12 +119,17 @@
   z-index: 1;
 }
 
-.sparkle-portrait {
-  flex-direction: column;
+.sparkle--video-player {
+  object-fit: cover;
+  object-position: center center;
+  width: 100%;
+  height: 100%;
 }
 
-.sparkle-landscape {
-  flex-direction: row;
+.sparkle--video-player-container {
+  width: auto;
+  height: 100%;
+  overflow: hidden;
 }
 
 .sparkle-portrait .sparkle-background--shape {
@@ -130,4 +139,8 @@
 .sparkle-portrait .sparkle-brand {
   width: 100%;
   bottom: 2.5%;
+}
+
+.sparkle-landscape .sparkle-section {
+  float: left;
 }

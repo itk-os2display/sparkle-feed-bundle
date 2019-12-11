@@ -36,27 +36,37 @@ angular.module('sparkleModule').directive('sparkle', [
         scope.closeTool = function () {
           scope.saving = true;
 
-          $http.get("/sparkle/feed/" + scope.slide.options.selectedFeed).then(
-            function success(response) {
-              $timeout(function () {
-                if (response.data && response.data.feeds.length > 0) {
-                  var first = response.data.feeds[0];
+          if (scope.slide.options.selectedFeed) {
+            $http.get("/sparkle/feed/" + scope.slide.options.selectedFeed).then(
+              function success(response) {
+                $timeout(function () {
+                  if (response.data && response.data.feeds.length > 0) {
+                    var first = response.data.feeds[0];
 
-                  scope.slide.options.firstElement = {
-                    'text': first.text,
-                    'textMarkup': first.textMarkup,
-                    'mediaUrl': first.mediaUrl,
-                    'videoUrl': first.videoUrl,
-                    'username': first.username,
-                    'createdTime': first.createdTime,
-                  };
-                }
+                    scope.slide.options.firstElement = {
+                      'text': first.text,
+                      'textMarkup': first.textMarkup,
+                      'mediaUrl': first.mediaUrl,
+                      'videoUrl': first.videoUrl,
+                      'username': first.username,
+                      'createdTime': first.createdTime,
+                    };
+                  }
 
+                  scope.saving = false;
+                  scope.close();
+                });
+              },
+              function err() {
                 scope.saving = false;
                 scope.close();
-              });
-            }
-          );
+              }
+            );
+          }
+          else {
+            scope.saving = false;
+            scope.close();
+          }
         };
       },
       templateUrl: '/bundles/os2displaysparklefeed/apps/sparkle/sparkle.html'

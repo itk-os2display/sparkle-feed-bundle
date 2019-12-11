@@ -9,6 +9,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use Os2Display\CoreBundle\Entity\Slide;
 use Os2Display\CoreBundle\Events\CronEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class SparkleFeedService
@@ -24,6 +25,8 @@ class SparkleFeedService
     private $entityManager;
     private $cronInterval;
     private $apiUrl;
+    private $logger;
+    private $disabled;
 
     /**
      * SparkleFeedService constructor.
@@ -33,15 +36,28 @@ class SparkleFeedService
      * @param $clientSecret
      * @param \Doctrine\Common\Cache\CacheProvider $cache
      * @param \Doctrine\ORM\EntityManagerInterface $entityManager
+     * @param \Psr\Log\LoggerInterface $logger
      */
-    public function __construct(int $cronInterval, string $apiUrl, $clientId, $clientSecret, CacheProvider $cache, EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        int $cronInterval,
+        string $apiUrl,
+        $clientId,
+        $clientSecret,
+        CacheProvider $cache,
+        EntityManagerInterface $entityManager,
+        LoggerInterface $logger
+    ) {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->cache = $cache;
         $this->entityManager = $entityManager;
         $this->cronInterval = $cronInterval;
         $this->apiUrl = $apiUrl;
+        $this->logger = $logger;
+
+        if (!$clientId || !$clientSecret) {
+            $this->disabled = true;
+        }
     }
 
     /**
@@ -49,6 +65,11 @@ class SparkleFeedService
      */
     public function onCron(CronEvent $cronEvent)
     {
+        // Bail out if the service is not enabled.
+        if ($this->disabled) {
+            return;
+        }
+
         $lastCron = $this->cache->fetch('last_cron');
         $timestamp = \time();
 
@@ -71,17 +92,31 @@ class SparkleFeedService
 
         /* @var Slide $slide */
         foreach ($slides as $slide) {
-            $options = $slide->getOptions();
-            $selectedFeedId = $options['selectedFeed'] ?? null;
+            try {
+                $options = $slide->getOptions();
+                $selectedFeedId = $options['selectedFeed'] ?? null;
 
-            if (isset($cache[$selectedFeedId])) {
-                $slide->setExternalData($cache[$selectedFeedId]);
+                if ($selectedFeedId == null) {
+                    $slide->setExternalData([]);
+                    continue;
+                }
+
+                if (isset($cache[$selectedFeedId])) {
+                    $slide->setExternalData($cache[$selectedFeedId]);
+                    continue;
+                }
+
+                $this->updateSlide($slide, $selectedFeedId);
+
+                $cache[$selectedFeedId] = $slide->getExternalData();
+            } catch (GuzzleException $e) {
+                $this->logger->error($e->getMessage());
+                continue;
+            } catch (\Exception $e) {
+                // Catching all exceptions to avoid blocking cron.
+                $this->logger->error($e->getMessage());
                 continue;
             }
-
-            $this->updateSlide($slide, $selectedFeedId);
-
-            $cache[$selectedFeedId] = $slide->getExternalData();
         }
 
         $this->entityManager->flush();
@@ -92,6 +127,7 @@ class SparkleFeedService
      *
      * @param \Os2Display\CoreBundle\Entity\Slide $slide
      * @param $selectedFeedId
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function updateSlide(Slide $slide, $selectedFeedId)
     {
@@ -123,7 +159,7 @@ class SparkleFeedService
      */
     private function getFeedItemObject($item)
     {
-        return (object) [
+        return (object)[
             'text' => $item->text,
             'textMarkup' => $this->wrapTags($item->text),
             'mediaUrl' => $item->mediaUrl,
@@ -168,76 +204,80 @@ class SparkleFeedService
     /**
      * Get a feed by id.
      *
-     * @param $id
-     * @return bool|mixed
+     * @param int $id
+     * @return bool|array
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getFeed($id)
+    public function getFeed(int $id)
     {
+        if ($this->disabled) {
+            return [];
+        }
+
         $token = $this->getToken();
 
         if (!$token) {
             return false;
         }
 
-        try {
-            $client = new Client();
-            $res = $client->request(
-                'GET',
-                $this->apiUrl.'v0.1/feed/'.$id,
-                [
-                    'timeout' => 2,
-                    'headers' => [
-                        'Authorization' => sprintf('Bearer %s', $token),
-                    ],
-                ]
-            );
+        $client = new Client();
+        $res = $client->request(
+            'GET',
+            $this->apiUrl.'v0.1/feed/'.$id,
+            [
+                'timeout' => 2,
+                'headers' => [
+                    'Authorization' => sprintf('Bearer %s', $token),
+                ],
+            ]
+        );
 
-            $contents = $res->getBody()->getContents();
-            $arr = json_decode($contents);
+        $contents = $res->getBody()->getContents();
 
-            $res = [];
+        $arr = json_decode($contents);
 
-            foreach ($arr->items as $item) {
-                $res[] = $this->getFeedItemObject($item);
-            }
+        $res = [];
 
-            return $res;
-        } catch (GuzzleException $exception) {
-            return false;
+        foreach ($arr->items as $item) {
+            $res[] = $this->getFeedItemObject($item);
         }
+
+        return $res;
     }
 
     /**
      * Get list of available feeds.
      *
-     * @return bool|mixed
+     * @return bool|array
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getFeeds() {
+    public function getFeeds()
+    {
+        if ($this->disabled) {
+            return [];
+        }
+
         $token = $this->getToken();
 
         if (!$token) {
             return false;
         }
 
-        try {
-            $client = new Client();
-            $res = $client->request(
-                'GET',
-                $this->apiUrl.'v0.1/feed',
-                [
-                    'timeout' => 2,
-                    'headers' => [
-                        'Authorization' => sprintf('Bearer %s', $token),
-                    ],
-                ]
-            );
+        $client = new Client();
+        $res = $client->request(
+            'GET',
+            $this->apiUrl.'v0.1/feed',
+            [
+                'timeout' => 2,
+                'headers' => [
+                    'Authorization' => sprintf('Bearer %s', $token),
+                ],
+            ]
+        );
 
-            $contents = $res->getBody()->getContents();
+        $contents = $res->getBody()->getContents();
 
-            return json_decode($contents);
-        } catch (GuzzleException $exception) {
-            return false;
-        }
+        return json_decode($contents);
     }
 
     /**
@@ -273,10 +313,12 @@ class SparkleFeedService
             $tokenResponse = $res->getBody()->getContents();
             $tokenDecoded = json_decode($tokenResponse);
 
-            $this->cache->save('access_token', $tokenDecoded->access_token, $tokenDecoded->expires_in - 1000);
+            $this->cache->save('access_token', $tokenDecoded->access_token,
+                $tokenDecoded->expires_in - 1000);
 
             return $tokenDecoded->access_token;
         } catch (GuzzleException $exception) {
+            $this->logger->error('SparkleFeed: Error authenticating. '.$exception->getMessage());
             return false;
         }
     }
