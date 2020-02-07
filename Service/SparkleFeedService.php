@@ -161,7 +161,7 @@ class SparkleFeedService
     {
         return (object)[
             'text' => $item->text,
-            'textMarkup' => $this->wrapTags($item->text),
+            'textMarkup' => $item->text !== null ? $this->wrapTags($item->text) : null,
             'mediaUrl' => $item->mediaUrl,
             'videoUrl' => $item->videoUrl,
             'username' => $item->username,
