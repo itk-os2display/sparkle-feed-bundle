@@ -14,10 +14,9 @@
          }"
          ng-class="{'fadeout': ikSlide.fadeout, 'fadein': ikSlide.fadeout === false}">
       <div class="sparkle--video-player-container" ng-if="ikSlide.direction">
-        <video poster="" id="sparkle-videoplayer-{{ ikSlide.uniqueId }}" class="sparkle--video-player" ng-if="ikSlide.currentItem.videoUrl"
+        <video poster="{{ ikSlide.currentItem.mediaUrl }}" id="sparkle-videoplayer-{{ ikSlide.uniqueId }}" class="sparkle--video-player" ng-if="ikSlide.currentItem.videoUrl"
                ng-style="{'height': (ikSlide.direction == 'column' ? (ikSlide.options.image_width ? ikSlide.options.image_width + '%' : '56.25%') : null), 'position': ikSlide.direction == 'column' ? 'absolute' : null}"
         >
-          <source type="video/mp4" />
         </video>
       </div>
     </div>
