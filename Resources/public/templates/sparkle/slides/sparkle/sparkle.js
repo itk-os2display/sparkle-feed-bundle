@@ -73,7 +73,7 @@ if (!window.slideFunctions['sparkle']) {
           );
         }
 
-        function fetchVideoAndPlay(video, url) {
+        function playVideo(video, url) {
           video.addEventListener('ended', videoEndedHandling);
           video.addEventListener('error', videoErrorHandling);
           video.src = url;
@@ -94,7 +94,7 @@ if (!window.slideFunctions['sparkle']) {
             slide.video.removeEventListener('ended', videoEndedHandling);
             slide.video.removeEventListener('error', videoErrorHandling);
 
-            fetchVideoAndPlay(slide.video, slide.currentItem.videoUrl);
+            playVideo(slide.video, slide.currentItem.videoUrl);
           });
         }
         else {
