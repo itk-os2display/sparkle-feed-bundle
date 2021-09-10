@@ -53,6 +53,36 @@ if (!window.slideFunctions['sparkle']) {
       slide.play = function (region, slide) {
         slide.setDirection();
 
+        function videoEndedHandling(event) {
+          region.itkLog.info("Video playback ended.", event);
+          region.$timeout(
+              function () {
+                slide.nextFeedItem(region, slide);
+              }, 1000
+          );
+        }
+
+        function videoErrorHandling(event) {
+          region.itkLog.info('Video playback error.', event);
+          slide.video.removeEventListener('error', videoErrorHandling);
+          slide.nextFeedItem(region, slide);
+        }
+
+        function fetchVideoAndPlay(video, url) {
+          fetch(url, {mode: 'no-cors'})
+              .then(response => response.blob())
+              .then(function(blob) {
+                video.addEventListener('ended', videoEndedHandling);
+                video.addEventListener('error', videoErrorHandling);
+                video.srcObject = blob;
+                return video.play();
+              })
+              .catch(function (e) {
+                region.itkLog.info('Video fetch error.', e);
+                slide.nextFeedItem(region, slide);
+              });
+        }
+
         if (!slide.currentItem) {
           region.nextSlide();
           return;
@@ -63,42 +93,9 @@ if (!window.slideFunctions['sparkle']) {
             slide.video = document.getElementById('sparkle-videoplayer-' + slide.uniqueId);
             slide.video.poster = slide.currentItem.mediaUrl;
 
-            function endedHandling(event) {
-              region.itkLog.info("Video playback ended.", event);
-              region.$timeout(
-                  function () {
-                    slide.nextFeedItem(region, slide);
-                  }, 1000
-              );
-            }
-
-            // Handle video ended.
-            slide.video.removeEventListener('ended', endedHandling);
-            slide.video.addEventListener('ended', endedHandling);
-
-            function videoErrorHandling(event) {
-              region.itkLog.info('Video playback error.', event);
-              slide.video.removeEventListener('error', videoErrorHandling);
-              slide.nextFeedItem(region, slide);
-            }
-
-            // Add/refresh error handling.
+            // Add/refresh video ended.
+            slide.video.removeEventListener('ended', videoEndedHandling);
             slide.video.removeEventListener('error', videoErrorHandling);
-            slide.video.addEventListener('error', videoErrorHandling);
-
-            function fetchVideoAndPlay(video, url) {
-              fetch(url, {mode: 'no-cors'})
-                  .then(response => response.blob())
-                  .then(function(blob) {
-                    video.srcObject = blob;
-                    return video.play();
-                  })
-                  .catch(function (e) {
-                    region.itkLog.info('Video fetch error.', e);
-                    slide.video.removeEventListener('error', videoErrorHandling);
-                    slide.nextFeedItem(region, slide);
-                  });
-            }
 
             fetchVideoAndPlay(slide.video, slide.currentItem.videoUrl);
           });
