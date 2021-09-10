@@ -64,13 +64,12 @@ if (!window.slideFunctions['sparkle']) {
 
         function videoErrorHandling(event) {
           region.itkLog.info('Video playback error.', event);
-          slide.video.removeEventListener('error', videoErrorHandling);
           slide.nextFeedItem(region, slide);
         }
 
         function fetchVideoAndPlay(video, url) {
           // Attempt to fetch before play.
-          fetch(url, {mode: 'no-cors'})
+          fetch(url, {mode: 'no-cors', method: 'HEAD'})
               .then(function() {
                 video.addEventListener('ended', videoEndedHandling);
                 video.addEventListener('error', videoErrorHandling);
@@ -79,6 +78,8 @@ if (!window.slideFunctions['sparkle']) {
               })
               .catch(function (e) {
                 region.itkLog.info('Video fetch error.', e);
+                slide.video.removeEventListener('ended', videoEndedHandling);
+                slide.video.removeEventListener('error', videoErrorHandling);
                 slide.nextFeedItem(region, slide);
               });
         }
