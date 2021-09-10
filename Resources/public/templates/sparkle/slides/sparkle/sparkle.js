@@ -69,12 +69,12 @@ if (!window.slideFunctions['sparkle']) {
         }
 
         function fetchVideoAndPlay(video, url) {
+          // Attempt to fetch before play.
           fetch(url, {mode: 'no-cors'})
-              .then(response => response.blob())
-              .then(function(blob) {
+              .then(function() {
                 video.addEventListener('ended', videoEndedHandling);
                 video.addEventListener('error', videoErrorHandling);
-                video.srcObject = blob;
+                video.src = url;
                 return video.play();
               })
               .catch(function (e) {
