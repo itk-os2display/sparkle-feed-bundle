@@ -64,21 +64,21 @@ if (!window.slideFunctions['sparkle']) {
 
             // Handle video ended.
             slide.video.removeEventListener('ended', slide.video.onended);
-            slide.video.onended = function ended(event) {
+            slide.video.on('ended', function ended(event) {
               region.itkLog.info("Video playback ended.", event);
               region.$timeout(function () {
                   slide.nextFeedItem(region, slide);
                 },
               1000);
-            };
+            });
 
             // Add/refresh error handling.
             slide.video.removeEventListener('error', slide.video.onerror);
-            slide.video.onerror = function videoErrorHandling(event) {
+            slide.video.on('error', function videoErrorHandling(event) {
               region.itkLog.info('Video playback error.', event);
               slide.video.removeEventListener('error', videoErrorHandling);
               slide.nextFeedItem(region, slide);
-            };
+            });
 
             slide.video.play();
           });
@@ -129,7 +129,9 @@ if (!window.slideFunctions['sparkle']) {
       region.itkLog.info("Running sparkle slide: " + slide.title);
 
       if (!slide.external_data || slide.external_data.length === 0) {
-        region.nextSlide();
+        region.$timeout(function () {
+          region.nextSlide();
+        }, 5000);
         return;
       }
 
