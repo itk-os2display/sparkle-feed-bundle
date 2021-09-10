@@ -61,13 +61,15 @@ if (!window.slideFunctions['sparkle']) {
         if (slide.currentItem.videoUrl) {
           region.$timeout(function () {
             slide.video = document.getElementById('sparkle-videoplayer-' + slide.uniqueId);
+            slide.video.poster = slide.currentItem.mediaUrl;
 
             function endedHandling(event) {
               region.itkLog.info("Video playback ended.", event);
-              region.$timeout(function () {
+              region.$timeout(
+                  function () {
                     slide.nextFeedItem(region, slide);
-                  },
-                  1000);
+                  }, 1000
+              );
             }
 
             // Handle video ended.
@@ -84,8 +86,21 @@ if (!window.slideFunctions['sparkle']) {
             slide.video.removeEventListener('error', videoErrorHandling);
             slide.video.addEventListener('error', videoErrorHandling);
 
-            slide.video.url = slide.currentItem.videoUrl;
-            slide.video.play();
+            function fetchVideoAndPlay(video, url) {
+              fetch(url, {mode: 'no-cors'})
+                  .then(response => response.blob())
+                  .then(function(blob) {
+                    video.srcObject = blob;
+                    return video.play();
+                  })
+                  .catch(function (e) {
+                    region.itkLog.info('Video fetch error.', e);
+                    slide.video.removeEventListener('error', videoErrorHandling);
+                    slide.nextFeedItem(region, slide);
+                  });
+            }
+
+            fetchVideoAndPlay(slide.video, slide.currentItem.videoUrl);
           });
         }
         else {
