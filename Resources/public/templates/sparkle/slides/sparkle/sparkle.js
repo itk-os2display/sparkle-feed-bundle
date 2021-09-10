@@ -84,6 +84,7 @@ if (!window.slideFunctions['sparkle']) {
             slide.video.removeEventListener('error', videoErrorHandling);
             slide.video.addEventListener('error', videoErrorHandling);
 
+            slide.video[0].url = slide.currentItem.videoUrl;
             slide.video.play();
           });
         }
