@@ -53,6 +53,33 @@ if (!window.slideFunctions['sparkle']) {
       slide.play = function (region, slide) {
         slide.setDirection();
 
+        function videoEndedHandling(event) {
+          region.itkLog.info("Video playback ended.", event);
+          region.$timeout(
+              function () {
+                slide.nextFeedItem(region, slide);
+              }, 1000
+          );
+        }
+
+        function videoErrorHandling(event) {
+          region.itkLog.info('Video playback error.', event);
+          slide.video.removeEventListener('ended', videoEndedHandling);
+          slide.video.removeEventListener('error', videoErrorHandling);
+          region.$timeout(
+              function () {
+                slide.nextFeedItem(region, slide);
+              }, 5000
+          );
+        }
+
+        function playVideo(video, url) {
+          video.addEventListener('ended', videoEndedHandling);
+          video.addEventListener('error', videoErrorHandling);
+          video.src = url;
+          return video.play();
+        }
+
         if (!slide.currentItem) {
           region.nextSlide();
           return;
@@ -61,26 +88,13 @@ if (!window.slideFunctions['sparkle']) {
         if (slide.currentItem.videoUrl) {
           region.$timeout(function () {
             slide.video = document.getElementById('sparkle-videoplayer-' + slide.uniqueId);
+            slide.video.poster = slide.currentItem.mediaUrl;
 
-            // Handle video ended.
-            slide.video.removeEventListener('ended', slide.video.onended);
-            slide.video.onended = function ended(event) {
-              region.itkLog.info("Video playback ended.", event);
-              region.$timeout(function () {
-                  slide.nextFeedItem(region, slide);
-                },
-              1000);
-            };
+            // Add/refresh video ended.
+            slide.video.removeEventListener('ended', videoEndedHandling);
+            slide.video.removeEventListener('error', videoErrorHandling);
 
-            // Add/refresh error handling.
-            slide.video.removeEventListener('error', slide.video.onerror);
-            slide.video.onerror = function videoErrorHandling(event) {
-              region.itkLog.info('Video playback error.', event);
-              slide.video.removeEventListener('error', videoErrorHandling);
-              slide.nextFeedItem(region, slide);
-            };
-
-            slide.video.play();
+            playVideo(slide.video, slide.currentItem.videoUrl);
           });
         }
         else {
@@ -129,7 +143,9 @@ if (!window.slideFunctions['sparkle']) {
       region.itkLog.info("Running sparkle slide: " + slide.title);
 
       if (!slide.external_data || slide.external_data.length === 0) {
-        region.nextSlide();
+        region.$timeout(function () {
+          region.nextSlide();
+        }, 5000);
         return;
       }
 
