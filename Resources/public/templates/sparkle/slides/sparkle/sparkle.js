@@ -62,23 +62,27 @@ if (!window.slideFunctions['sparkle']) {
           region.$timeout(function () {
             slide.video = document.getElementById('sparkle-videoplayer-' + slide.uniqueId);
 
-            // Handle video ended.
-            slide.video.removeEventListener('ended', slide.video.onended);
-            slide.video.on('ended', function ended(event) {
+            function endedHandling(event) {
               region.itkLog.info("Video playback ended.", event);
               region.$timeout(function () {
-                  slide.nextFeedItem(region, slide);
-                },
-              1000);
-            });
+                    slide.nextFeedItem(region, slide);
+                  },
+                  1000);
+            }
 
-            // Add/refresh error handling.
-            slide.video.removeEventListener('error', slide.video.onerror);
-            slide.video.on('error', function videoErrorHandling(event) {
+            // Handle video ended.
+            slide.video.removeEventListener('ended', endedHandling);
+            slide.video.addEventListener('ended', endedHandling);
+
+            function videoErrorHandling(event) {
               region.itkLog.info('Video playback error.', event);
               slide.video.removeEventListener('error', videoErrorHandling);
               slide.nextFeedItem(region, slide);
-            });
+            }
+
+            // Add/refresh error handling.
+            slide.video.removeEventListener('error', videoErrorHandling);
+            slide.video.addEventListener('error', videoErrorHandling);
 
             slide.video.play();
           });
