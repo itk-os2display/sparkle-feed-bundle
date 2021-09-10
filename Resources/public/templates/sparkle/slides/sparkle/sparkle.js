@@ -64,24 +64,20 @@ if (!window.slideFunctions['sparkle']) {
 
         function videoErrorHandling(event) {
           region.itkLog.info('Video playback error.', event);
-          slide.nextFeedItem(region, slide);
+          slide.video.removeEventListener('ended', videoEndedHandling);
+          slide.video.removeEventListener('error', videoErrorHandling);
+          region.$timeout(
+              function () {
+                slide.nextFeedItem(region, slide);
+              }, 5000
+          );
         }
 
         function fetchVideoAndPlay(video, url) {
-          // Attempt to fetch before play.
-          fetch(url, {mode: 'no-cors', method: 'HEAD'})
-              .then(function() {
-                video.addEventListener('ended', videoEndedHandling);
-                video.addEventListener('error', videoErrorHandling);
-                video.src = url;
-                return video.play();
-              })
-              .catch(function (e) {
-                region.itkLog.info('Video fetch error.', e);
-                slide.video.removeEventListener('ended', videoEndedHandling);
-                slide.video.removeEventListener('error', videoErrorHandling);
-                slide.nextFeedItem(region, slide);
-              });
+          video.addEventListener('ended', videoEndedHandling);
+          video.addEventListener('error', videoErrorHandling);
+          video.src = url;
+          return video.play();
         }
 
         if (!slide.currentItem) {
