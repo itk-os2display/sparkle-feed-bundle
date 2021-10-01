@@ -8,7 +8,7 @@
     "edit": "sparkle-edit.html",
     "preview": "sparkle-edit.html",
     "css": "sparkle.css",
-    "js": "bundles/os2displaysparklefeed/templates/sparkle/slides/sparkle/sparkle.js"
+    "js": "bundles/os2displaysparklefeed/templates/sparkle/slides/sparkle/sparkle.js?t=1633086733"
   },
   "slide_type": "sparkle",
   "media_type": "mixed",
